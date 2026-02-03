@@ -1,5 +1,6 @@
 package com.practice.reels.core.data.utils
 
+import com.practice.reels.core.utils.Log
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.plugins.HttpTimeout
@@ -36,7 +37,7 @@ object HttpClientFactory {
             install(Logging) {
                 logger = object : Logger {
                     override fun log(message: String) {
-                        println(message)
+                        Log.d(message)
                     }
                 }
                 level = LogLevel.BODY

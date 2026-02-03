@@ -15,7 +15,6 @@ import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.encodeToJsonElement
 
-// API call
 suspend inline fun <reified T, reified S, reified U> apiCall(
     urlParams: T,
     headerParams: S,
@@ -34,7 +33,6 @@ suspend inline fun <reified T, reified S, reified U> apiCall(
             this.method = httpMethod
 
             headers {
-                // Serialize params to JSON object
                 val jsonElement = json.encodeToJsonElement(headerParams)
                 if (jsonElement is JsonObject) {
                     jsonElement.forEach { (key, value) ->
@@ -48,7 +46,6 @@ suspend inline fun <reified T, reified S, reified U> apiCall(
             }
 
             url {
-                // Serialize params to JSON object
                 val jsonElement = json.encodeToJsonElement(urlParams)
                 if (jsonElement is JsonObject) {
                     jsonElement.forEach { (key, value) ->
@@ -61,7 +58,6 @@ suspend inline fun <reified T, reified S, reified U> apiCall(
                 }
             }
 
-            // Add body for POST/PUT
             if (httpMethod == HttpMethod.Post || httpMethod == HttpMethod.Put) {
                 val jsonElement = json.encodeToJsonElement(bodyParams)
                 setBody(jsonElement)

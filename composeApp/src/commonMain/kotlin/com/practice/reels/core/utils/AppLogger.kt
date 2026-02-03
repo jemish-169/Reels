@@ -8,7 +8,7 @@ interface AppLogger {
     fun i(tag: String, message: String)
 }
 
-object Logger {
+object Log {
     private val logger = createAppLogger()
 
     fun e(message: String, tag: String = "TAG", throwable: Throwable? = null) {
