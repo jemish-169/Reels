@@ -10,16 +10,16 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import com.practice.reels.animation.AnimateScreen
 import com.practice.reels.core.utils.MessagePasser
+import com.practice.reels.features.community.presentation.screen.CommunityDetailScreen
 import com.practice.reels.features.home.presentation.screen.HomeScreen
 
 @Composable
 fun RootNavGraph(
-    onFinish: () -> Unit,
     messagePasser: MessagePasser
 ) {
-    // to show app content in safe area and leave space for status bar and navigation buttons
     val snackBarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(Unit) {
@@ -44,14 +44,25 @@ fun RootNavGraph(
                 exitTransition = AnimateScreen.leftExitTransition()
             ) {
                 HomeScreen(
+                    paddingValues = paddingValues,
+                    onReelClick = { communityId ->
+                        rootNavController.navigate(RootRoute.CommunityDetailScreen(communityId))
+                    }
+                )
+            }
+
+            composable<RootRoute.CommunityDetailScreen>(
+                popEnterTransition = AnimateScreen.rightPopEnterTransition(),
+                enterTransition = AnimateScreen.leftEnterTransition(),
+                popExitTransition = AnimateScreen.rightPopExitTransition(),
+                exitTransition = AnimateScreen.leftExitTransition()
+            ) { backStackEntry ->
+                val route = backStackEntry.toRoute<RootRoute.CommunityDetailScreen>()
+                CommunityDetailScreen(
+                    communityId = route.communityId,
                     paddingValues = paddingValues
                 )
             }
         }
     }
-}
-
-private fun handleBackClick(rootNavController: NavHostController, onBackOrFinish: () -> Unit) {
-    if (rootNavController.previousBackStackEntry == null) onBackOrFinish()
-    else rootNavController.navigateUp()
 }

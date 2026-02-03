@@ -43,7 +43,7 @@ private val LightColorScheme = lightColorScheme(
 )
 
 @Composable
-fun Reelsheme(
+fun ReelsTheme(
     themeOption: ThemeOption = ThemeOption.SYSTEM,
     content: @Composable () -> Unit
 ) {
@@ -65,7 +65,7 @@ fun Reelsheme(
 
 @Composable
 fun PreviewWithTheme(content: @Composable () -> Unit) {
-    Reelsheme {
+    ReelsTheme {
         Surface(color = MaterialTheme.colorScheme.background) {
             content()
         }
