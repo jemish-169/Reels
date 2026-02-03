@@ -38,6 +38,11 @@ kotlin {
 
             // ktor for networking
             implementation(libs.ktor.client.okhttp)
+
+            // Media3 ExoPlayer for reels video (HLS)
+            implementation(libs.media3.exoplayer)
+            implementation(libs.media3.exoplayer.hls)
+            implementation(libs.media3.ui)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -67,6 +72,9 @@ kotlin {
 
             // coil for loading images
             implementation(libs.bundles.coil)
+
+            // date/time
+            implementation(libs.kotlinx.datetime)
 
             // material icons extended
             implementation(compose.materialIconsExtended)

@@ -10,7 +10,8 @@ import com.practice.reels.features.home.presentation.model.ReelUi
 fun Feed.toUi(): FeedUi {
     return FeedUi(
         items = this.items.map { it.toUi() },
-        endOfFeed = this.endOfFeed
+        endOfFeed = this.endOfFeed,
+        pageSession = this.pageSession
     )
 }
 

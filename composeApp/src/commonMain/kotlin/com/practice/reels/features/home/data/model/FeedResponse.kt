@@ -469,5 +469,8 @@ data class FeedRequest(
     val deviceId: String,
 
     @SerialName("type")
-    val type: Int
+    val type: Int,
+
+    @SerialName("page_session")
+    val pageSession: String? = null
 )

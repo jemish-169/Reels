@@ -1,0 +1,13 @@
+package com.practice.reels.features.home.presentation.screen.component
+
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+
+@Composable
+expect fun ReelVideoPlayer(
+    videoUrl: String?,
+    videoUrlM3u8: String?,
+    thumbnailUrl: String,
+    modifier: Modifier = Modifier,
+    isPlaying: Boolean = true
+)

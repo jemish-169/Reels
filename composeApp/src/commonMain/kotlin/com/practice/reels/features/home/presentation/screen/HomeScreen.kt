@@ -1,27 +1,27 @@
 package com.practice.reels.features.home.presentation.screen
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.pager.VerticalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.practice.reels.core.presentation.state.AppState
-import com.practice.reels.features.home.presentation.screen.component.ReelListItem
+import com.practice.reels.features.home.presentation.screen.component.ReelPageItem
 import com.practice.reels.features.home.presentation.viewmodel.HomeViewModel
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import reels.composeapp.generated.resources.Res
 import reels.composeapp.generated.resources.error_with_message
+import reels.composeapp.generated.resources.no_data_found
 
 @Composable
 fun HomeScreen(
@@ -46,21 +46,35 @@ fun HomeScreen(
 
             is AppState.Success -> {
                 val feedUi = state.message
-                LazyColumn(
-                    modifier = Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(12.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    items(
-                        items = feedUi.items,
-                        key = { it.id }
-                    ) { reel ->
-                        ReelListItem(
+                if (feedUi.items.isEmpty()) {
+                    Text(
+                        text = stringResource(Res.string.no_data_found),
+                        modifier = Modifier.align(Alignment.Center)
+                    )
+                } else {
+                    val pagerState = rememberPagerState(
+                        initialPage = 0,
+                        pageCount = { feedUi.items.size }
+                    )
+                    LaunchedEffect(pagerState.currentPage, feedUi.items.size, feedUi.endOfFeed) {
+                        viewModel.loadNextPageIfNeeded(
+                            currentPageIndex = pagerState.currentPage,
+                            totalItems = feedUi.items.size
+                        )
+                    }
+                    VerticalPager(
+                        state = pagerState,
+                        modifier = Modifier.fillMaxSize(),
+                        beyondViewportPageCount = 1,
+                        userScrollEnabled = true
+                    ) { page ->
+                        val reel = feedUi.items[page]
+                        val isCurrentPage = page == pagerState.currentPage
+                        ReelPageItem(
                             reel = reel,
-                            onClick = {
-                                reel.communityId?.let { communityId ->
-                                    onReelClick(reel.communityId)
-                                }
+                            isCurrentPage = isCurrentPage,
+                            onCommunityClick = {
+                                reel.communityId?.let { id -> onReelClick(id) }
                             }
                         )
                     }

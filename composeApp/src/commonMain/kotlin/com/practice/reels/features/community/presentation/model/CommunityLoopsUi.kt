@@ -17,7 +17,9 @@ data class LoopUi(
     val viewCount: String,
     val isSubscriber: Boolean,
     val isPostAllowed: Boolean,
+    val latestMessageAt: String?,
     val latestMessageThumbnail: String?,
+    val latestMessageThumbnails: List<String>,
     val latestMessageOwner: String?,
     val collaborators: List<LoopCollaboratorUi>
 )

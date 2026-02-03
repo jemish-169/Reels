@@ -20,6 +20,10 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.practice.reels.features.home.presentation.model.ReelUi
+import org.jetbrains.compose.resources.stringResource
+import reels.composeapp.generated.resources.Res
+import reels.composeapp.generated.resources.comments_count
+import reels.composeapp.generated.resources.likes_count
 
 @Composable
 fun ReelListItem(
@@ -62,12 +66,12 @@ fun ReelListItem(
                 }
                 Row {
                     Text(
-                        text = "❤️ ${reel.likes}",
+                        text = stringResource(Res.string.likes_count, reel.likes),
                         style = MaterialTheme.typography.labelSmall
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = "💬 ${reel.commentCount}",
+                        text = stringResource(Res.string.comments_count, reel.commentCount),
                         style = MaterialTheme.typography.labelSmall
                     )
                 }

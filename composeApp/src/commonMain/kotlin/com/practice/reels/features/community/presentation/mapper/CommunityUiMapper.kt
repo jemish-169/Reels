@@ -1,6 +1,7 @@
 package com.practice.reels.features.community.presentation.mapper
 
 import com.practice.reels.core.presentation.utils.formatCount
+import com.practice.reels.core.presentation.utils.formatRelativeTime
 import com.practice.reels.features.community.domain.model.CommunityDetails
 import com.practice.reels.features.community.domain.model.CommunityLoops
 import com.practice.reels.features.community.domain.model.CommunityMembers
@@ -59,7 +60,10 @@ private fun Loop.toUi(): LoopUi {
         viewCount = formatCount(this.viewCount),
         isSubscriber = this.isSubscriber,
         isPostAllowed = this.isPostAllowed,
+        latestMessageAt = this.latestMessageAt?.toLongOrNull()?.let { formatRelativeTime(it) }
+            ?: this.latestMessageAt,
         latestMessageThumbnail = this.latestMessageThumbnail,
+        latestMessageThumbnails = this.latestMessageThumbnails,
         latestMessageOwner = this.latestMessageOwner,
         collaborators = this.collaborators.map { it.toUi() }
     )

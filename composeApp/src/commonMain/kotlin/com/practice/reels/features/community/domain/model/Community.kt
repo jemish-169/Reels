@@ -86,6 +86,7 @@ data class Loop(
     val unreadMessageCount: Int,
     val latestMessageAt: String?,
     val latestMessageThumbnail: String?,
+    val latestMessageThumbnails: List<String>,
     val latestMessageOwner: String?,
     val collaborators: List<LoopCollaborator>
 )

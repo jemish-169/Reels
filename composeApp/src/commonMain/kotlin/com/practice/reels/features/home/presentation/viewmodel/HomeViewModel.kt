@@ -16,6 +16,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
+private const val DEVICE_ID = "JEMISH_KHUNT"
+private const val LOAD_NEXT_THRESHOLD = 2
+
 class HomeViewModel(
     private val messagePasser: MessagePasser,
     private val homeRepository: HomeRepository
@@ -24,16 +27,19 @@ class HomeViewModel(
     private val _feedState = MutableStateFlow<AppState<FeedUi, String>>(value = AppState.Idle)
     val feedState: StateFlow<AppState<FeedUi, String>> = _feedState.asStateFlow()
 
+    private val _isLoadingNext = MutableStateFlow(false)
+    val isLoadingNext: StateFlow<Boolean> = _isLoadingNext.asStateFlow()
+
     init {
-        fetchFeed("YOUR_DEVICE_ID")
+        fetchFeed()
     }
 
-    fun fetchFeed(deviceId: String) {
+    fun fetchFeed(deviceId: String = DEVICE_ID) {
         viewModelScope.launch {
             try {
                 _feedState.update { AppState.Loading }
 
-                homeRepository.fetchFeed(deviceId)
+                homeRepository.fetchFeed(deviceId, pageSession = null)
                     .onSuccess { res ->
                         val feedUi = res.toUi()
                         _feedState.update { AppState.Success(message = feedUi) }
@@ -45,6 +51,52 @@ class HomeViewModel(
                 val message = e.message ?: DataError.UNKNOWN.value
                 messagePasser.sendMessage(msg = message)
                 _feedState.update { AppState.Error(error = message) }
+            }
+        }
+    }
+
+    /**
+     * Call when user is about to reach the end of the list (e.g. within [LOAD_NEXT_THRESHOLD] items).
+     * Fetches the next page only when [endOfFeed] is false and we have a [pageSession].
+     */
+    fun loadNextPageIfNeeded(currentPageIndex: Int, totalItems: Int) {
+        if (_isLoadingNext.value) return
+
+        val current = _feedState.value
+        if (current !is AppState.Success) return
+
+        val feed = current.message
+        if (feed.endOfFeed) return
+        if (feed.pageSession.isNullOrBlank()) return
+        if (totalItems == 0) return
+        if (currentPageIndex < totalItems - LOAD_NEXT_THRESHOLD) return
+
+        viewModelScope.launch {
+            _isLoadingNext.value = true
+            try {
+                homeRepository.fetchFeed(DEVICE_ID, pageSession = feed.pageSession)
+                    .onSuccess { nextFeed ->
+                        val nextUi = nextFeed.toUi()
+                        _feedState.update { state ->
+                            when (state) {
+                                is AppState.Success -> AppState.Success(
+                                    message = FeedUi(
+                                        items = state.message.items + nextUi.items,
+                                        endOfFeed = nextUi.endOfFeed,
+                                        pageSession = nextUi.pageSession
+                                    )
+                                )
+                                else -> state
+                            }
+                        }
+                    }
+                    .onError { error ->
+                        messagePasser.sendMessage(msg = error)
+                    }
+            } catch (e: Exception) {
+                messagePasser.sendMessage(msg = e.message ?: DataError.UNKNOWN.value)
+            } finally {
+                _isLoadingNext.value = false
             }
         }
     }

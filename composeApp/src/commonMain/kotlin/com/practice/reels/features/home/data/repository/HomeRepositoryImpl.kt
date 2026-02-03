@@ -19,12 +19,12 @@ class HomeRepositoryImpl(
     private val httpClient: HttpClient
 ) : HomeRepository {
 
-    override suspend fun fetchFeed(deviceId: String): ResultOf<Feed, String> {
+    override suspend fun fetchFeed(deviceId: String, pageSession: String?): ResultOf<Feed, String> {
         return try {
             val result = safeCall<FeedResponse> {
                 apiCall(
                     urlParams = EmptyParams,
-                    bodyParams = FeedRequest(deviceId = deviceId, type = 1),
+                    bodyParams = FeedRequest(deviceId = deviceId, type = 1, pageSession = pageSession),
                     serviceCall = APIConstants.FEED_HOME,
                     client = httpClient,
                     httpMethod = HttpMethod.Post

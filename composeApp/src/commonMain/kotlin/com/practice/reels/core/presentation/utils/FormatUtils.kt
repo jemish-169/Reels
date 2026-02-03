@@ -1,26 +1,29 @@
 package com.practice.reels.core.presentation.utils
 
 import androidx.compose.ui.graphics.Color
+import kotlinx.datetime.Instant
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
+import kotlin.time.Clock.System.now
+import kotlin.time.ExperimentalTime
 
-/**
- * Parses a hex color string to Compose Color.
- * Supports formats: #RRGGBB and #AARRGGBB
- */
 fun parseColor(colorString: String): Color? {
     return try {
         val hex = colorString.removePrefix("#")
         when (hex.length) {
             6 -> Color(
-                red = hex.substring(0, 2).toInt(16) / 255f,
+                red = hex.take(2).toInt(16) / 255f,
                 green = hex.substring(2, 4).toInt(16) / 255f,
                 blue = hex.substring(4, 6).toInt(16) / 255f
             )
+
             8 -> Color(
-                alpha = hex.substring(0, 2).toInt(16) / 255f,
+                alpha = hex.take(2).toInt(16) / 255f,
                 red = hex.substring(2, 4).toInt(16) / 255f,
                 green = hex.substring(4, 6).toInt(16) / 255f,
                 blue = hex.substring(6, 8).toInt(16) / 255f
             )
+
             else -> null
         }
     } catch (_: Exception) {
@@ -28,10 +31,6 @@ fun parseColor(colorString: String): Color? {
     }
 }
 
-/**
- * Formats a count number to a readable string with K/M suffixes.
- * Examples: 1000 -> "1K", 1500000 -> "1M"
- */
 fun formatCount(count: Int): String {
     return when {
         count >= 1_000_000 -> "${count / 1_000_000}M"
@@ -40,12 +39,38 @@ fun formatCount(count: Int): String {
     }
 }
 
-/**
- * Formats duration in seconds to mm:ss format.
- * Examples: 65 -> "1:05", 125 -> "2:05"
- */
 fun formatDuration(seconds: Int): String {
     val minutes = seconds / 60
     val secs = seconds % 60
     return "$minutes:${secs.toString().padStart(2, '0')}"
+}
+
+private const val MS_PER_MINUTE = 60 * 1000L
+private const val MS_PER_HOUR = 60 * MS_PER_MINUTE
+private const val MS_PER_DAY = 24 * MS_PER_HOUR
+private const val MS_PER_WEEK = 7 * MS_PER_DAY
+
+@OptIn(ExperimentalTime::class)
+fun formatRelativeTime(timestampMs: Long): String =
+    formatRelativeTime(timestampMs, now().toEpochMilliseconds())
+
+fun formatRelativeTime(timestampMs: Long, nowMs: Long): String {
+    val diffMs = (nowMs - timestampMs).coerceAtLeast(0L)
+    return when {
+        diffMs < MS_PER_MINUTE -> "0m ago"
+        diffMs < MS_PER_HOUR -> "${diffMs / MS_PER_MINUTE}m ago"
+        diffMs < MS_PER_DAY -> "${diffMs / MS_PER_HOUR}h ago"
+        diffMs < MS_PER_WEEK -> "${diffMs / MS_PER_DAY}d ago"
+        diffMs < 4 * MS_PER_WEEK -> "${diffMs / MS_PER_WEEK}w ago"
+        else -> formatMonthYear(timestampMs)
+    }
+}
+
+@OptIn(ExperimentalTime::class)
+private fun formatMonthYear(timestampMs: Long): String {
+    val instant = Instant.fromEpochMilliseconds(timestampMs)
+    val date = instant.toLocalDateTime(TimeZone.UTC).date
+    val month = date.monthNumber.toString().padStart(2, '0')
+    val year = date.year
+    return "$month-$year"
 }

@@ -118,6 +118,7 @@ private fun ConversationDto.toLoop(): Loop? {
         unreadMessageCount = unreadMessageCount,
         latestMessageAt = latestMessageAt,
         latestMessageThumbnail = latestMessages.firstOrNull()?.thumbnailUrl,
+        latestMessageThumbnails = latestMessages.mapNotNull { it.thumbnailUrl }.take(2),
         latestMessageOwner = latestMessages.firstOrNull()?.owner?.username,
         collaborators = g.members.take(3).map { it.toCollaborator() }
     )
