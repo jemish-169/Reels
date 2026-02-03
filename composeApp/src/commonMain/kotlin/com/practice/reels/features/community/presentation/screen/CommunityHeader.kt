@@ -5,15 +5,12 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -40,65 +37,59 @@ import reels.composeapp.generated.resources.share
 
 @Composable
 fun CommunityHeader(details: CommunityDetailsUi) {
-    val bannerHeight = 160.dp
-    val logoSize = 80.dp
-    val logoTopPadding = 80.dp
+    Box(modifier = Modifier.fillMaxWidth()) {
+        if (!details.banner.isNullOrEmpty()) {
+            AsyncImage(
+                model = details.banner,
+                contentDescription = stringResource(Res.string.community_banner),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(160.dp),
+                contentScale = ContentScale.Crop
+            )
+        } else {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(160.dp)
+                    .background(
+                        color = details.colorCode?.let { parseColor(it) }
+                            ?: MaterialTheme.colorScheme.primaryContainer
+                    )
+            )
+        }
 
-    Column(modifier = Modifier.fillMaxWidth()) {
-        Box(modifier = Modifier.fillMaxWidth()) {
-            if (!details.banner.isNullOrEmpty()) {
+        Box(
+            modifier = Modifier
+                .align(Alignment.TopStart)
+                .padding(start = 16.dp, top = 120.dp)
+                .size(80.dp)
+                .clip(CircleShape)
+                .background(MaterialTheme.colorScheme.surface)
+        ) {
+            if (!details.dp.isNullOrEmpty()) {
                 AsyncImage(
-                    model = details.banner,
-                    contentDescription = stringResource(Res.string.community_banner),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(bannerHeight),
+                    model = details.dp,
+                    contentDescription = details.name,
+                    modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.Crop
                 )
             } else {
                 Box(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .height(bannerHeight)
+                        .fillMaxSize()
                         .background(
                             color = details.colorCode?.let { parseColor(it) }
-                                ?: MaterialTheme.colorScheme.primaryContainer
-                        )
-                )
-            }
-
-            Box(
-                modifier = Modifier
-                    .align(Alignment.TopStart)
-                    .padding(start = 16.dp, top = logoTopPadding)
-                    .size(logoSize)
-                    .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.surface)
-            ) {
-                if (!details.dp.isNullOrEmpty()) {
-                    AsyncImage(
-                        model = details.dp,
-                        contentDescription = details.name,
-                        modifier = Modifier.fillMaxSize(),
-                        contentScale = ContentScale.Crop
+                                ?: MaterialTheme.colorScheme.primary
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = details.name.take(2).uppercase(),
+                        color = MaterialTheme.colorScheme.onPrimary,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 24.sp
                     )
-                } else {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(
-                                color = details.colorCode?.let { parseColor(it) }
-                                    ?: MaterialTheme.colorScheme.primary
-                            ),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = details.name.take(2).uppercase(),
-                            color = MaterialTheme.colorScheme.onPrimary,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 24.sp
-                        )
-                    }
                 }
             }
         }
@@ -106,14 +97,13 @@ fun CommunityHeader(details: CommunityDetailsUi) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 12.dp)
+                .padding(top = 172.dp)
                 .padding(horizontal = 16.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.End
         ) {
-            Spacer(modifier = Modifier.width(logoSize + logoTopPadding))
             Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                horizontalArrangement = Arrangement.spacedBy(space = 8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Box(
