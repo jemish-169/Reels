@@ -3,8 +3,6 @@ package com.practice.reels.features.home.data.model
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-// ======================= Feed Response =======================
-
 @Serializable
 data class FeedResponse(
 
@@ -78,8 +76,6 @@ data class ScoreDto(
     val finalScore: Double = 0.0
 )
 
-// ======================= Owner =======================
-
 @Serializable
 data class OwnerDto(
 
@@ -132,8 +128,6 @@ data class OwnerBrandDto(
     @SerialName("brand_user_logo")
     val brandUserLogo: Int? = null
 )
-
-// ======================= Community =======================
 
 @Serializable
 data class CommunityDto(
@@ -224,8 +218,6 @@ data class CommunityBrandDto(
     val brandHandle: String? = null
 )
 
-// ======================= Loop =======================
-
 @Serializable
 data class LoopDto(
 
@@ -312,8 +304,6 @@ data class LoopActionDto(
     @SerialName("action_id")
     val actionId: Int? = null
 )
-
-// ======================= Video =======================
 
 @Serializable
 data class VideoDto(
@@ -471,8 +461,6 @@ data class LinkDto(
     @SerialName("title")
     val title: String? = null
 )
-
-// ======================= Request =======================
 
 @Serializable
 data class FeedRequest(

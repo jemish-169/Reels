@@ -6,7 +6,6 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -60,7 +59,10 @@ fun RootNavGraph(
                 val route = backStackEntry.toRoute<RootRoute.CommunityDetailScreen>()
                 CommunityDetailScreen(
                     communityId = route.communityId,
-                    paddingValues = paddingValues
+                    paddingValues = paddingValues,
+                    onBackClick = {
+                        rootNavController.navigateUp()
+                    }
                 )
             }
         }

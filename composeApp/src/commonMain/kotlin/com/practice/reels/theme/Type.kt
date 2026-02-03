@@ -42,7 +42,6 @@ fun poppinsFont() = FontFamily(
 fun poppinsTypography() = Typography().run {
     val fontFamily = poppinsFont()
     copy(
-        // Display
         displayLarge = TextStyle(
             fontFamily = fontFamily,
             fontWeight = FontWeight.Normal,
@@ -58,8 +57,6 @@ fun poppinsTypography() = Typography().run {
             fontWeight = FontWeight.Normal,
             fontSize = 36.sp
         ),
-
-        // Headline
         headlineLarge = TextStyle(
             fontFamily = fontFamily,
             fontWeight = FontWeight.Normal,
@@ -75,8 +72,6 @@ fun poppinsTypography() = Typography().run {
             fontWeight = FontWeight.Normal,
             fontSize = 24.sp
         ),
-
-        // Title
         titleLarge = TextStyle(
             fontFamily = fontFamily,
             fontWeight = FontWeight.Normal,
@@ -92,8 +87,6 @@ fun poppinsTypography() = Typography().run {
             fontWeight = FontWeight.Medium,
             fontSize = 14.sp
         ),
-
-        // Body
         bodyLarge = TextStyle(
             fontFamily = fontFamily,
             fontWeight = FontWeight.Normal,
@@ -109,8 +102,6 @@ fun poppinsTypography() = Typography().run {
             fontWeight = FontWeight.Normal,
             fontSize = 12.sp
         ),
-
-        // Label
         labelLarge = TextStyle(
             fontFamily = fontFamily,
             fontWeight = FontWeight.Medium,

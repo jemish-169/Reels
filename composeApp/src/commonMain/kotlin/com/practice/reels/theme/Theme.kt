@@ -9,7 +9,7 @@ import androidx.compose.runtime.Composable
 import com.practice.reels.core.domain.util.ThemeOption
 
 private val DarkColorScheme = darkColorScheme(
-    primary = red,
+    primary = blue,
     onPrimary = white,
 
     secondary = lightGrey,
@@ -26,7 +26,7 @@ private val DarkColorScheme = darkColorScheme(
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = red,
+    primary = blue,
     onPrimary = white,
 
     secondary = darkGrey,

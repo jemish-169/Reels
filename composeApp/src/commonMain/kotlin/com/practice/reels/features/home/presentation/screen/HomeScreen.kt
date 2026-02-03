@@ -18,7 +18,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.practice.reels.core.presentation.state.AppState
 import com.practice.reels.features.home.presentation.screen.component.ReelListItem
 import com.practice.reels.features.home.presentation.viewmodel.HomeViewModel
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import reels.composeapp.generated.resources.Res
+import reels.composeapp.generated.resources.error_with_message
 
 @Composable
 fun HomeScreen(
@@ -66,7 +69,7 @@ fun HomeScreen(
 
             is AppState.Error -> {
                 Text(
-                    text = "Error: ${state.error}",
+                    text = stringResource(Res.string.error_with_message, state.error),
                     modifier = Modifier.align(Alignment.Center)
                 )
             }

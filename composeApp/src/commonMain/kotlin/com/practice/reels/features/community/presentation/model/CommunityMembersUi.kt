@@ -6,5 +6,11 @@ data class CommunityMembersUi(
 
 data class MemberUi(
     val id: String,
-    val username: String
+    val nickname: String?,
+    val name: String?,
+    val bio: String?,
+    val profileImage: String?,
+    val isAvatar: Boolean,
+    val role: Int?,
+    val isBrandSystemUser: Boolean
 )

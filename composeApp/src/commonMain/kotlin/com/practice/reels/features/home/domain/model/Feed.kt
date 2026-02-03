@@ -1,15 +1,11 @@
 package com.practice.reels.features.home.domain.model
 
-// ======================= Feed =======================
-
 data class Feed(
     val items: List<Reel>,
     val endOfFeed: Boolean,
     val expiry: Long?,
     val pageSession: String?
 )
-
-// ======================= Reel =======================
 
 data class Reel(
     val id: String,

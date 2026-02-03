@@ -12,11 +12,13 @@ import com.practice.reels.features.community.presentation.mapper.toUi
 import com.practice.reels.features.community.presentation.model.CommunityDetailsUi
 import com.practice.reels.features.community.presentation.model.CommunityLoopsUi
 import com.practice.reels.features.community.presentation.model.CommunityMembersUi
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.supervisorScope
 
 class CommunityViewModel(
     private val communityId: String,
@@ -34,65 +36,72 @@ class CommunityViewModel(
     val membersState: StateFlow<AppState<CommunityMembersUi, String>> = _membersState.asStateFlow()
 
     init {
-        fetchCommunityDetails()
-        fetchCommunityLoops()
-        fetchCommunityMembers()
+        fetchAllCommunityData()
     }
 
-    private fun fetchCommunityDetails() {
+    private fun fetchAllCommunityData() {
         viewModelScope.launch {
-            try {
-                _detailsState.update { AppState.Loading }
-                communityRepository.getCommunityDetails(communityId)
-                    .onSuccess { res ->
-                        _detailsState.update { AppState.Success(message = res.toUi()) }
-                    }.onError { error ->
-                        messagePasser.sendMessage(msg = error)
-                        _detailsState.update { AppState.Error(error = error) }
-                    }
-            } catch (e: Exception) {
-                val message = e.message ?: DataError.UNKNOWN.value
-                messagePasser.sendMessage(msg = message)
-                _detailsState.update { AppState.Error(error = message) }
+            _detailsState.update { AppState.Loading }
+            _loopsState.update { AppState.Loading }
+            _membersState.update { AppState.Loading }
+
+            supervisorScope {
+                val detailsJob = async { fetchCommunityDetails() }
+                val loopsJob = async { fetchCommunityLoops() }
+                val membersJob = async { fetchCommunityMembers() }
+
+                detailsJob.await()
+                loopsJob.await()
+                membersJob.await()
             }
         }
     }
 
-    private fun fetchCommunityLoops() {
-        viewModelScope.launch {
-            try {
-                _loopsState.update { AppState.Loading }
-                communityRepository.getCommunityLoops(communityId)
-                    .onSuccess { res ->
-                        _loopsState.update { AppState.Success(message = res.toUi()) }
-                    }.onError { error ->
-                        messagePasser.sendMessage(msg = error)
-                        _loopsState.update { AppState.Error(error = error) }
-                    }
-            } catch (e: Exception) {
-                val message = e.message ?: DataError.UNKNOWN.value
-                messagePasser.sendMessage(msg = message)
-                _loopsState.update { AppState.Error(error = message) }
-            }
+    private suspend fun fetchCommunityDetails() {
+        try {
+            communityRepository.getCommunityDetails(communityId)
+                .onSuccess { res ->
+                    _detailsState.update { AppState.Success(message = res.toUi()) }
+                }.onError { error ->
+                    messagePasser.sendMessage(msg = error)
+                    _detailsState.update { AppState.Error(error = error) }
+                }
+        } catch (e: Exception) {
+            val message = e.message ?: DataError.UNKNOWN.value
+            messagePasser.sendMessage(msg = message)
+            _detailsState.update { AppState.Error(error = message) }
         }
     }
 
-    private fun fetchCommunityMembers() {
-        viewModelScope.launch {
-            try {
-                _membersState.update { AppState.Loading }
-                communityRepository.getCommunityMembers(communityId)
-                    .onSuccess { res ->
-                        _membersState.update { AppState.Success(message = res.toUi()) }
-                    }.onError { error ->
-                        messagePasser.sendMessage(msg = error)
-                        _membersState.update { AppState.Error(error = error) }
-                    }
-            } catch (e: Exception) {
-                val message = e.message ?: DataError.UNKNOWN.value
-                messagePasser.sendMessage(msg = message)
-                _membersState.update { AppState.Error(error = message) }
-            }
+    private suspend fun fetchCommunityLoops() {
+        try {
+            communityRepository.getCommunityLoops(communityId)
+                .onSuccess { res ->
+                    _loopsState.update { AppState.Success(message = res.toUi()) }
+                }.onError { error ->
+                    messagePasser.sendMessage(msg = error)
+                    _loopsState.update { AppState.Error(error = error) }
+                }
+        } catch (e: Exception) {
+            val message = e.message ?: DataError.UNKNOWN.value
+            messagePasser.sendMessage(msg = message)
+            _loopsState.update { AppState.Error(error = message) }
+        }
+    }
+
+    private suspend fun fetchCommunityMembers() {
+        try {
+            communityRepository.getCommunityMembers(communityId)
+                .onSuccess { res ->
+                    _membersState.update { AppState.Success(message = res.toUi()) }
+                }.onError { error ->
+                    messagePasser.sendMessage(msg = error)
+                    _membersState.update { AppState.Error(error = error) }
+                }
+        } catch (e: Exception) {
+            val message = e.message ?: DataError.UNKNOWN.value
+            messagePasser.sendMessage(msg = message)
+            _membersState.update { AppState.Error(error = message) }
         }
     }
 }

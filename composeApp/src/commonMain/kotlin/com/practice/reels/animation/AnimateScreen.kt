@@ -34,31 +34,4 @@ object AnimateScreen {
         )
     }
 
-    fun topEnterTransition(): AnimatedContentTransitionScope<*>.() -> EnterTransition? = {
-        slideIntoContainer(
-            AnimatedContentTransitionScope.SlideDirection.Up,
-            animationSpec = tween(300)
-        )
-    }
-
-    fun bottomPopEnterTransition(): AnimatedContentTransitionScope<*>.() -> EnterTransition? = {
-        slideIntoContainer(
-            AnimatedContentTransitionScope.SlideDirection.Up,
-            animationSpec = tween(300)
-        )
-    }
-
-    fun topExitTransition(): AnimatedContentTransitionScope<*>.() -> ExitTransition? = {
-        slideOutOfContainer(
-            AnimatedContentTransitionScope.SlideDirection.Down,
-            animationSpec = tween(300)
-        )
-    }
-
-    fun bottomPopExitTransition(): AnimatedContentTransitionScope<*>.() -> ExitTransition? = {
-        slideOutOfContainer(
-            AnimatedContentTransitionScope.SlideDirection.Down,
-            animationSpec = tween(300)
-        )
-    }
 }

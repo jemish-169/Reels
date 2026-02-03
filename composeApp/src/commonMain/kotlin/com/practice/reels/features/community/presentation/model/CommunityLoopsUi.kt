@@ -8,5 +8,24 @@ data class CommunityLoopsUi(
 data class LoopUi(
     val id: String,
     val groupId: String,
-    val groupName: String
+    val groupName: String,
+    val groupDescription: String?,
+    val colorCode: String?,
+    val dp: String?,
+    val memberCount: String,
+    val videoCount: String,
+    val viewCount: String,
+    val isSubscriber: Boolean,
+    val isPostAllowed: Boolean,
+    val latestMessageThumbnail: String?,
+    val latestMessageOwner: String?,
+    val collaborators: List<LoopCollaboratorUi>
+)
+
+data class LoopCollaboratorUi(
+    val id: String,
+    val name: String?,
+    val username: String?,
+    val profileImage: String?,
+    val isAvatar: Boolean
 )

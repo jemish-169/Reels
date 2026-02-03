@@ -1,4 +1,3 @@
-import org.gradle.kotlin.dsl.implementation
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -68,6 +67,9 @@ kotlin {
 
             // coil for loading images
             implementation(libs.bundles.coil)
+
+            // material icons extended
+            implementation(compose.materialIconsExtended)
         }
         nativeMain.dependencies {
             implementation(libs.ktor.client.darwin)

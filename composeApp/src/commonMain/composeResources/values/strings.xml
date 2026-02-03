@@ -1,3 +1,18 @@
 <resources>
     <string name="app_name">Reels</string>
+    <string name="back_icon">Back Icon</string>
+    
+    <!-- Community Screen -->
+    <string name="community_banner">Community Banner</string>
+    <string name="join">Join</string>
+    <string name="share">Share</string>
+    <string name="groups">Groups</string>
+    <string name="members">Members</string>
+    <string name="videos">Videos</string>
+    <string name="posted">posted</string>
+    <string name="others">others</string>
+    <string name="no_data_found">No data found</string>
+    <string name="error_with_message">Error: %1$s</string>
+    <string name="likes_count">❤️ %1$d</string>
+    <string name="comments_count">💬 %1$d</string>
 </resources>
